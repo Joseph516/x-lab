@@ -4,11 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"service/global"
+	"service/internal/middleware"
 	"service/internal/routers/api"
 )
 
 func NewRouters() *gin.Engine {
 	r := gin.New()
+
+	// 中间件设置
+	r.Use(middleware.Cors())
 
 	// 文件上传
 	upload := api.NewUpload()
