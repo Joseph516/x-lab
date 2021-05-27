@@ -3,14 +3,6 @@
 .vscode/
 .DS_Store
 
-# service
-go.sum
-service/bin/
-config.yaml
-
 # scheme
 scheme/
 !scheme/wiki.md
-
-# storage
-storage/

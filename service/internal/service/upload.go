@@ -4,8 +4,8 @@ import (
 	"errors"
 	"mime/multipart"
 	"os"
-	"x-lab/service/global"
-	"x-lab/service/pkg/upload"
+	"service/global"
+	"service/pkg/upload"
 )
 
 type FileInfo struct {

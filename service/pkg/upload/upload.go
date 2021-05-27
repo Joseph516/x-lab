@@ -7,8 +7,8 @@ import (
 	"os"
 	"path"
 	"strings"
-	"x-lab/service/global"
-	"x-lab/service/pkg/util"
+	"service/global"
+	"service/pkg/util"
 )
 
 type FileType int

@@ -1,6 +1,6 @@
 package global
 
-import "x-lab/service/pkg/settings"
+import "service/pkg/settings"
 
 var (
 	ServerSetting *settings.ServerSetting

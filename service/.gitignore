@@ -1,0 +1,7 @@
+# service
+go.sum
+bin/
+configs/config.yaml
+
+# storage
+storage/

@@ -1,4 +1,4 @@
-module x-lab
+module service
 
 go 1.16
 

@@ -4,11 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"service/global"
+	"service/internal/model"
+	"service/internal/routers"
+	"service/pkg/settings"
 	"time"
-	"x-lab/service/global"
-	"x-lab/service/internal/model"
-	"x-lab/service/internal/routers"
-	"x-lab/service/pkg/settings"
 )
 
 func init() {
@@ -43,7 +43,7 @@ func main() {
 // 配置热更新
 func setupSetting() error {
 	// 服务器基本配置
-	setting, err := settings.NewSetting("service/configs/")
+	setting, err := settings.NewSetting("configs/")
 	if err != nil {
 		return err
 	}

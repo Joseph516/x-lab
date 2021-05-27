@@ -6,11 +6,11 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"service/internal/service"
+	"service/pkg/app"
+	"service/pkg/errcode"
+	"service/pkg/upload"
 	"strconv"
-	"x-lab/service/internal/service"
-	"x-lab/service/pkg/app"
-	"x-lab/service/pkg/errcode"
-	"x-lab/service/pkg/upload"
 )
 
 type Upload struct {

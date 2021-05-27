@@ -6,7 +6,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"x-lab/service/pkg/errcode"
+	"service/pkg/errcode"
 )
 
 type Response struct {

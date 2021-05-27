@@ -3,8 +3,8 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"x-lab/service/global"
-	"x-lab/service/internal/routers/api"
+	"service/global"
+	"service/internal/routers/api"
 )
 
 func NewRouters() *gin.Engine {
