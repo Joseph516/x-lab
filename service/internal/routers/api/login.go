@@ -1,0 +1,37 @@
+package api
+
+import (
+	"github.com/gin-gonic/gin"
+	"service/internal/service"
+	"service/pkg/app"
+	"service/pkg/errcode"
+)
+
+type Login struct {
+}
+
+func NewLogin() Login {
+	return Login{}
+}
+
+// LoginIn 用户登陆
+func (l Login) LoginIn(c *gin.Context) {
+	param := service.LoginRequest{}
+	response := app.NewResponse(c)
+
+	// 参数绑定与校验
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+
+	// 用户校验
+	svc := service.New(c.Request.Context())
+	err := svc.LoginIn(&param)
+	if err != nil {
+		response.ToErrResponse(errcode.LoginInFailed.WithDetails(err.Error()))
+		return
+	}
+	response.ToErrResponse(errcode.Success)
+}

@@ -49,3 +49,11 @@ func (u Upload) UploadFile(c *gin.Context) {
 	}
 	response.ToResponse(body)
 }
+
+func (u Upload) Get(c *gin.Context)  {
+
+}
+
+func (u Upload) List(c *gin.Context)  {
+
+}
