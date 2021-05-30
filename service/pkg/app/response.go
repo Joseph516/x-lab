@@ -6,6 +6,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"service/pkg/errcode"
 )
 
@@ -19,11 +20,14 @@ func NewResponse(c *gin.Context) *Response {
 
 // ToResponse 请求成功，返回响应的数据
 func (resp *Response) ToResponse(data interface{}) {
-	if data == nil {
-		resp.Ctx.JSON(errcode.Success.ToHttpStatusCode(), gin.H{})
-		return
+	response := gin.H{
+		"code": errcode.Success.Code(),
+		"msg":  errcode.Success.Msg(),
 	}
-	resp.Ctx.JSON(errcode.Success.ToHttpStatusCode(), data)
+	if data != nil {
+		response["data"] = data
+	}
+	resp.Ctx.JSON(http.StatusOK, response)
 }
 
 // ToErrResponse 请求失败，返回错误信息
@@ -35,5 +39,5 @@ func (resp *Response) ToErrResponse(err *errcode.Error) {
 	if len(err.Details()) > 0 {
 		response["details"] = err.Details()
 	}
-	resp.Ctx.JSON(err.ToHttpStatusCode(), response)
+	resp.Ctx.JSON(http.StatusOK, response)
 }

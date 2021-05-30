@@ -38,5 +38,5 @@ func (r Register) Register(c *gin.Context)  {
 		response.ToErrResponse(errcode.RegisterFailed.WithDetails(err.Error()))
 		return
 	}
-	response.ToErrResponse(errcode.Success)
+	response.ToResponse(nil)
 }

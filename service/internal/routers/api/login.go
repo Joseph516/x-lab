@@ -40,11 +40,7 @@ func (l Login) LoginIn(c *gin.Context) {
 		return
 	}
 	data := gin.H{
-		"code": errcode.Success.Code(),
-		"msg":  errcode.Success.Msg(),
-		"data": gin.H{
-			"token": token,
-		},
+		"token": token,
 	}
 	response.ToResponse(data)
 }

@@ -60,6 +60,7 @@ func (e *Error) WithDetails(details ...string) *Error {
 	return &newErr
 }
 
+// TODO: 没啥必要，后续去除
 func (e *Error) ToHttpStatusCode() int {
 	code := e.Code()
 	switch code {

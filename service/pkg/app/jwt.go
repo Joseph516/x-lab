@@ -22,7 +22,8 @@ func GenerateToken(appKey, appSecret string) (string, error) {
 	expiredTime := nowTime.Add(global.JWTSetting.Expire)
 
 	claims := Claims{
-		AppKey:    util.EncodeMD5(appKey),
+		// AppKey:    util.EncodeMD5(appKey),
+		AppKey:    appKey,
 		AppSecret: util.EncodeMD5(appSecret),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiredTime.Unix(),
@@ -48,3 +49,17 @@ func ParseToken(token string) (*Claims, error) {
 	}
 	return nil, err
 }
+
+// 这样解析会报错
+// func GetAppKeyFromToken(token string) (string, error) {
+// 	payload, err := base64.StdEncoding.DecodeString(strings.Split(token, ".")[1])
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	claims := Claims{}
+// 	err = json.Unmarshal(payload, &claims)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return claims.AppKey, nil
+// }

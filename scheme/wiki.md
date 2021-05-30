@@ -20,7 +20,7 @@
 | :--------- | :----- | :---------- | :------------- | :---- |
 | username   | string | 用户名      | true，长度2-20 |       |
 | password   | string | 密码        | true，长度4-32 |       |
-| Repassword | String | 密码确认    | true，长度4-32 |       |
+| repassword | String | 密码确认    | true，长度4-32 |       |
 
 **Request-example:**
 
@@ -84,18 +84,18 @@ curl -X POST http://127.0.0.1:8080/user/register -d "username=hyh&password=1234&
 **Request-example:**
 
 ```shell
-curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H "Content-Type:application/x-www-form-urlencoded"
+curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234"
 ```
 
 **Response-fields:**
 
-| Field   | Type   | Description  | Since |
-| :------ | :----- | :----------- | :---- |
-| code    | int32  | 状态码       | -     |
-| msg     | string | 状态信息     | -     |
-| details | string | 状态相信信息 |       |
-| data    | object | 相关数据     |       |
-| └─token | string | 权限token    |       |
+| Field   | Type   | Description         | Since |
+| :------ | :----- | :------------------ | :---- |
+| code    | int32  | 状态码              | -     |
+| msg     | string | 状态信息            | -     |
+| details | string | 状态相信信息        |       |
+| data    | object | 数据结果            |       |
+| └─token | string | token用户权限字符串 |       |
 
 **Response-example:**
 
@@ -104,7 +104,7 @@ curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H
 {
     "code": 200,
     "data": {
-        "token": "eyJhbGciOiJIUzI1Ni..."
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
     },
     "msg": "成功"
 }
@@ -122,7 +122,7 @@ curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H
 
 ### Upload files
 
-**URL:** /upload/file
+**URL:** /file/upload
 
 **Type:** POST
 
@@ -132,16 +132,15 @@ curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H
 
 **Request-parameters:**
 
-| Parameter | Type   | Description                      | Required | Since |
-| :-------- | :----- | :------------------------------- | :------- | :---- |
-| file      | string | 文件路径                         | true     |       |
-| type      | int    | 文件类型。1：图片；              | true     |       |
-| token     | string | 权限，位于请求参数或者Header中。 | true     |       |
+| Parameter | Type   | Description         | Required | Since |
+| :-------- | :----- | :------------------ | :------- | :---- |
+| file      | string | 文件路径            | true     |       |
+| type      | int    | 文件类型。1：图片； | true     |       |
 
 **Request-example:**
 
 ```shell
-curl -X POST http://127.0.0.1:8080/file/upload -F file=@'/Users/joe/Pictures/wallpaper/wolf.jpeg' -F type=1 -H=
+curl -X POST http://127.0.0.1:8080/file/upload -F file=@'/Users/joe/Pictures/wallpaper/wolf.jpeg' -F type=1
 ```
 
 **Response-fields:**
@@ -150,7 +149,7 @@ curl -X POST http://127.0.0.1:8080/file/upload -F file=@'/Users/joe/Pictures/wal
 | :---------------- | :----- | :------------- | :---- |
 | code              | int32  | 状态码         | -     |
 | msg               | string | 状态信息       | -     |
-| data              | object | 相关数据       | -     |
+| data              | object | 数据结果       | -     |
 | └─file_access_url | string | 文件可访问路径 | -     |
 
 **Response-example:**
@@ -159,10 +158,11 @@ curl -X POST http://127.0.0.1:8080/file/upload -F file=@'/Users/joe/Pictures/wal
 {
     "code": 200,
     "data": {
-        "file_access_url": "http://127.0.0.1:8080/static/87221652a79fc3c9b04cde0b335fdd5b.jpeg"
+        "file_access_url": "http://127.0.0.1:8080/file/static/ipad.jpg"
     },
-    "msg": "success"
+    "msg": "成功"
 }
 ```
 
 ## Notes
+

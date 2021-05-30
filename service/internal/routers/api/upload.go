@@ -48,23 +48,25 @@ func (u Upload) UploadFile(c *gin.Context) {
 		response.ToErrResponse(errcode.InvalidParams.WithDetails("Invalid file type."))
 		return
 	}
+	// 从token中获取当前用户
+	token := c.GetHeader("token")
+	claims, err := app.ParseToken(token)
+	if err != nil {
+		response.ToErrResponse(errcode.UnauthorizedTokenError.WithDetails(err.Error()))
+		return
+	}
 	// 将文件保存到指定位置
 	svc := service.New(c.Request.Context())
-	// TODO: 检查数据库中是否存在相同文件filename，作者，类型
-	fileInfo, err := svc.UploadFile(upload.FileType(fileType), file, fileHeader)
+	fileInfo, err := svc.UploadFile(upload.FileType(fileType), file, fileHeader, claims.AppKey)
 	if err != nil {
 		response.ToErrResponse(errcode.UploadFileFailed.WithDetails(err.Error()))
 		return
 	}
 	// 上传成功
-	body := gin.H{
-		"code": 200,
-		"msg":  "success",
-		"data": gin.H{
-			"file_access_url": fileInfo.AccessUrl,
-		},
+	data := gin.H{
+		"file_access_url": fileInfo.AccessUrl,
 	}
-	response.ToResponse(body)
+	response.ToResponse(data)
 }
 
 func (u Upload) Get(c *gin.Context) {

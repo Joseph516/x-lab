@@ -21,7 +21,7 @@ type FileInfo struct {
 // 	CreatedBy string `json:"created_by"`
 // }
 
-func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fileHeader *multipart.FileHeader) (*FileInfo, error) {
+func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fileHeader *multipart.FileHeader, username string) (*FileInfo, error) {
 	// fileName := upload.GetFileName(fileHeader.Filename)
 	fileName := fileHeader.Filename // 不对文件名加密
 	if !upload.CheckContainExt(fileType, fileName) {
@@ -51,7 +51,8 @@ func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fi
 	// 将文件上传记录写入数据库Î
 	// TODO: 文件上传写入数据库信息待完善
 	// TODO: 上传重名文件
-	err := svc.dao.UploadFile(fileName, "", "hyh", accessUrl, int(fileType))
+	// TODO: 检查数据库中是否存在相同文件filename，作者，类型
+	err := svc.dao.UploadFile(fileName, "", username, accessUrl, int(fileType))
 	if err != nil {
 		return nil, err
 	}

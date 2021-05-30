@@ -21,7 +21,7 @@ func JWT() gin.HandlerFunc {
 		}
 		// 判断token的有效性
 		if token == "" {
-			ecode = errcode.InvalidParams
+			ecode = errcode.InvalidParams.WithDetails("未提供有效token")
 		} else {
 			_, err := app.ParseToken(token)
 			if err != nil {
