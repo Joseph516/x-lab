@@ -6,6 +6,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"mime/multipart"
 	"service/internal/service"
 	"service/pkg/app"
 	"service/pkg/errcode"
@@ -18,6 +19,21 @@ type Upload struct {
 
 func NewUpload() Upload {
 	return Upload{}
+}
+
+func (u Upload) CheckFile(c *gin.Context) (multipart.File, *multipart.FileHeader, int) {
+	file, fileHeader, err := c.Request.FormFile("file")
+	response := app.NewResponse(c)
+	if err != nil {
+		response.ToErrResponse(errcode.InvalidParams.WithDetails(err.Error()))
+		return nil, nil, 0
+	}
+	fileType, _ := strconv.Atoi(c.PostForm("type"))
+	if fileHeader == nil || fileType <= 0 {
+		response.ToErrResponse(errcode.InvalidParams.WithDetails("Invalid file type."))
+		return nil, nil, 0
+	}
+	return file, fileHeader, fileType
 }
 
 func (u Upload) UploadFile(c *gin.Context) {
@@ -34,6 +50,7 @@ func (u Upload) UploadFile(c *gin.Context) {
 	}
 	// 将文件保存到指定位置
 	svc := service.New(c.Request.Context())
+	// TODO: 检查数据库中是否存在相同文件filename，作者，类型
 	fileInfo, err := svc.UploadFile(upload.FileType(fileType), file, fileHeader)
 	if err != nil {
 		response.ToErrResponse(errcode.UploadFileFailed.WithDetails(err.Error()))
@@ -50,10 +67,10 @@ func (u Upload) UploadFile(c *gin.Context) {
 	response.ToResponse(body)
 }
 
-func (u Upload) Get(c *gin.Context)  {
+func (u Upload) Get(c *gin.Context) {
 
 }
 
-func (u Upload) List(c *gin.Context)  {
+func (u Upload) List(c *gin.Context) {
 
 }
