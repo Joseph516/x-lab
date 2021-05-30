@@ -27,7 +27,7 @@ export default {
   name:'UploadFile',
   data(){
     return{
-      uploadActionUrl:'http://localhost:8080/upload/file',   // 上传路径
+      uploadActionUrl:'http://localhost:8080/file/upload',   // 上传路径
       fileList: [ ],                                         // 文件列表
       // 上传附加参数
       uploadData: {

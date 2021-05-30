@@ -6,7 +6,7 @@
   <div class="">
       <div class="section over-hide">
         <div class="container">
-          <!-- 流行区域 -->
+          <!-- 流星区域 -->
           <span class="fly"></span>
           <span class="fly1"></span>
           <span class="fly2"></span>
@@ -31,20 +31,21 @@
                       <!-- 登录 -->
                       <div class="login-box">
                            <div class="user-box">
-                              <input type="text" name="" required="">
+                              <input type="text" name="" v-model="loginForm.username" required="true">
                               <label>username</label>
                             </div>
                             <div class="user-box">
-                              <input type="password" name="" required="">
+                              <input type="password" name="" v-model="loginForm.password" required="true">
                               <label>password</label>
                             </div>
-                            <a href="#" id="submit">
+                            <a id="submit" @click="submitLogin">
                               <span></span>
                               <span></span>
                               <span></span>
                               <span></span>
                               Submit
                             </a>
+                            <span class="register-error"> {{loginError}}</span>
                       </div>
                     </div>
                     <div class="card-back">
@@ -54,24 +55,25 @@
                       <!-- 注册区域 -->
                       <div class="login-box">
                            <div class="user-box">
-                              <input type="text" name="" required="">
+                              <input type="text" name="" v-model="registerForm.username" required="">
                               <label>Username</label>
                             </div>
                             <div class="user-box">
-                              <input type="password" name="" required="">
+                              <input type="password" name="" v-model="registerForm.password" required="">
                               <label>Password</label>
                             </div>
                             <div class="user-box">
-                              <input type="password" name="" required="">
+                              <input type="password" name="" v-model="registerForm.repassword" required="">
                               <label>ReRassword</label>
                             </div>
-                            <a href="#" id="submit">
+                            <a id="submit" @click="submitRegister">
                               <span></span>
                               <span></span>
                               <span></span>
                               <span></span>
                               register
                             </a>
+                            <span class="register-error"> {{registerError}}</span>
                       </div>
                     </div>
 
@@ -87,6 +89,10 @@
 </template>
 
 <script>
+import {checkAccount,checkNull} from '@/plugins/checkUtils.js'
+import {request} from '@/network/request.js';
+import {codeCheck} from '@/network/response.js';
+import md5 from 'js-md5';
 export default {
   name:'Login',
   components:{
@@ -95,24 +101,82 @@ export default {
   data(){
     return{
       // 登录表单信息
-      loginFrom :{
+      loginForm :{
+        username:'',
+        password:''
+      },
+      loginError:'',
+
+      registerForm:{
         username:'',
         password:'',
-      }
+        repassword:'',
+      },
+      registerError : '',
       
     }
   },
   methods:{
 
     // 登录
-    submitLogin(){
-
+    async submitLogin(){
+      // 登录信息校验
+      let checkRes = checkNull(this.loginForm.username,this.loginForm.password)
+      console.log(checkRes);
+      if(checkRes){
+        // 校验失败进入
+        this.loginError = checkRes;
+        return;
+      }
+      // 校验成功，发起请求
+      const {data:res} = await this.$http.post('user/login',this.loginForm)
+      console.log(res);
+      // 保存信息。
+      if(res.code !== 200){
+        this.loginError ='账号或密码错误';
+        return;
+      }
+      // 存token，转页面
+      window.sessionStorage.setItem('token',res.data.toke);
+      window.sessionStorage.setItem('loginedUsername',this.loginForm.username);
+      this.$router.push('/home');
     },
 
     // 注册
-    submitRegister(){
-
+    async submitRegister(){
+      // 账户校验
+      let checkRes = checkAccount(this.registerForm.username);
+      // 账户校验
+      if(checkRes.data == '' && checkRes.data === false){
+        this.registerError = checkRes.msg;
+        return;
+      }
+      if(this.registerForm.password == '' || this.registerForm.repassword == '') {
+        this.registerError = '密码不能为空';
+        return
+      }
+      if(this.registerForm.password !== this.registerForm.repassword){
+        this.registerError = '两次输入密码不一致';
+        return
+      }
+      
+      // 请求体
+      const {data:res} = await this.$http.post('user/register',this.registerForm);
+      console.log('res :>> ', res);
+      if(!codeCheck(res)){
+        // 后端请求结果校验
+        if(res.details && res.details.length === 1){
+          this.registerError =  res.details[0];
+          return;
+        }
+      }
+      // 直接登录
+      this.loginForm.username = this.registerForm.username;
+      this.loginForm.password = this.registerForm.password;
+      this.submitLogin();
+      // this.$router.push('/home');
     }
+    
 
   }
 
@@ -354,6 +418,7 @@ export default {
 }
 
 .login-box a:hover {
+  cursor: pointer;
   background: #03e9f4;
   color: #fff;
   border-radius: 5px;
@@ -523,7 +588,7 @@ export default {
     transform: rotateZ(225deg);
   }
 }
-.container:hover  .fly3{
+.container:hover .fly3{
   position: absolute;
   display: block;
 
@@ -625,5 +690,10 @@ export default {
     left: 60%;
     transform: rotateZ(225deg);
   }
+}
+
+.register-error{
+  color: indianred;
+  font-size: 16px;
 }
 </style> 

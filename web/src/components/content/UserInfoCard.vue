@@ -10,7 +10,8 @@
       </div>
       <!-- 用户信息下 -->
       <div class="userInfo">
-        <div class="username">姚相帛</div>
+        <div class="username">{{userInfo.username}} <i style="cursor:pointer" class="el-icon-s-promotion
+" @click="logout"></i> </div>
         <ul>
           <li><i class="el-icon-phone-outline"> &nbsp;&nbsp;18835130952</i></li>
           <li><i class="el-icon-message">&nbsp;&nbsp;xblifebetter@gmail.com</i></li>
@@ -18,14 +19,37 @@
       </div>
       <!-- 档案 -->
       <div>
-        <el-button ><i class="el-icon-document-checked"></i>  档案</el-button>
+        <el-button ><i class="el-icon-document-checked"></i>档案</el-button>
       </div>
     </div>
 </template>
 
 <script>
 export default {
-  name:'UserInfoCard'
+  name:'UserInfoCard',
+  data(){
+    return{
+      userInfo:{
+        username:'Yao Xiangbo',
+        email:'ylifebetter@163.com',
+      }
+    }
+  },
+  created(){
+      
+  },
+  methods:{
+    getUserInfo(){
+      this.userInfo.username = window.sessionStorage.getItem('loginedUsername');
+    },
+
+    // 登出
+    logout(){
+      window.sessionStorage.removeItem('token');
+      window.sessionStorage.removeItem('loginedUsername');
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
 
