@@ -6,4 +6,5 @@ var (
 	ServerSetting *settings.ServerSetting
 	DatabaseSetting *settings.DatabaseSetting
 	AppSetting *settings.AppSetting
+	JWTSetting *settings.JWTSetting
 )

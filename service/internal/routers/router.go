@@ -11,7 +11,8 @@ import (
 func NewRouters() *gin.Engine {
 	r := gin.New()
 
-	// 中间件设置
+	/* 中间件设置 */
+	// 跨域问题
 	r.Use(middleware.Cors())
 
 	// 注册与登陆
@@ -21,17 +22,20 @@ func NewRouters() *gin.Engine {
 	{
 		user.POST("/register", register.Register)
 		user.POST("/login", login.LoginIn)
+		user.DELETE("/login", login.Exit)
 	}
-
-	// 文件上传
-	upload := api.NewUpload()
-	r.POST("/upload/file", upload.UploadFile)
+	file := r.Group("file")
 	// 提供静态资源访问，当访问/static，实际上访问的是global.AppSetting.UploadSavePath文件下的文件
-	r.StaticFS("/static", http.Dir(global.AppSetting.UploadSavePath))
-	r.GET("/upload/file", upload.List)
-	r.GET("/upload/file:filename", upload.Get)
-
-
+	file.StaticFS("static", http.Dir(global.AppSetting.UploadSavePath))
+	// JWT用户权限
+	file.Use(middleware.JWT())
+	{
+		upload := api.NewUpload()
+		file.POST("/upload", upload.UploadFile)
+		file.GET("/upload", upload.List)
+		file.GET("/upload:filename", upload.Get)
+	}
+	// 文件上传
 
 	return r
 }

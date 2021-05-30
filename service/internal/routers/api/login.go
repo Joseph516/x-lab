@@ -33,5 +33,22 @@ func (l Login) LoginIn(c *gin.Context) {
 		response.ToErrResponse(errcode.LoginInFailed.WithDetails(err.Error()))
 		return
 	}
-	response.ToErrResponse(errcode.Success)
+	// 登陆成功，生成token
+	token, err := app.GenerateToken(param.Username, param.Password)
+	if err != nil {
+		response.ToErrResponse(errcode.ServerError)
+		return
+	}
+	data := gin.H{
+		"code": errcode.Success.Code(),
+		"msg":  errcode.Success.Msg(),
+		"data": gin.H{
+			"token": token,
+		},
+	}
+	response.ToResponse(data)
+}
+
+func (l Login) Exit(c *gin.Context) {
+	// TBD
 }

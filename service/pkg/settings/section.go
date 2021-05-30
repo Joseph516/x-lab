@@ -31,6 +31,13 @@ type AppSetting struct {
 	UploadImageMaxSize   int
 }
 
+type JWTSetting struct {
+	Secret             string
+	Issuer             string
+	Expire             time.Duration
+	SessionSecretLogin string
+}
+
 // ReadSection 将配置文件中指定键k对应的配置项，保存至值v中
 // k为键，对应config文件夹中的每一类
 // v对应global.setting中的变量

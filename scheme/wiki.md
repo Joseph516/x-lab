@@ -94,6 +94,8 @@ curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H
 | code    | int32  | 状态码       | -     |
 | msg     | string | 状态信息     | -     |
 | details | string | 状态相信信息 |       |
+| data    | object | 相关数据     |       |
+| └─token | string | 权限token    |       |
 
 **Response-example:**
 
@@ -101,7 +103,10 @@ curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H
 // 登陆成功
 {
     "code": 200,
-    "msg": "success"
+    "data": {
+        "token": "eyJhbGciOiJIUzI1Ni..."
+    },
+    "msg": "成功"
 }
 // 登陆失败
 {
@@ -127,15 +132,16 @@ curl -X POST http://127.0.0.1:8080/user/login -d "username=hyh&password=1234" -H
 
 **Request-parameters:**
 
-| Parameter | Type   | Description         | Required | Since |
-| :-------- | :----- | :------------------ | :------- | :---- |
-| file      | string | 文件路径            | true     |       |
-| type      | int    | 文件类型。1：图片； | true     |       |
+| Parameter | Type   | Description                      | Required | Since |
+| :-------- | :----- | :------------------------------- | :------- | :---- |
+| file      | string | 文件路径                         | true     |       |
+| type      | int    | 文件类型。1：图片；              | true     |       |
+| token     | string | 权限，位于请求参数或者Header中。 | true     |       |
 
 **Request-example:**
 
 ```shell
-curl -X POST http://127.0.0.1:8080/upload/file -F file=@'/Users/joe/Pictures/wallpaper/wolf.jpeg' -F type=1
+curl -X POST http://127.0.0.1:8080/file/upload -F file=@'/Users/joe/Pictures/wallpaper/wolf.jpeg' -F type=1 -H=
 ```
 
 **Response-fields:**
@@ -144,7 +150,7 @@ curl -X POST http://127.0.0.1:8080/upload/file -F file=@'/Users/joe/Pictures/wal
 | :---------------- | :----- | :------------- | :---- |
 | code              | int32  | 状态码         | -     |
 | msg               | string | 状态信息       | -     |
-| data              | object | 具体结果       | -     |
+| data              | object | 相关数据       | -     |
 | └─file_access_url | string | 文件可访问路径 | -     |
 
 **Response-example:**
