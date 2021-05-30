@@ -6,9 +6,9 @@ import (
 	"mime/multipart"
 	"os"
 	"path"
-	"strings"
 	"service/global"
 	"service/pkg/util"
+	"strings"
 )
 
 type FileType int

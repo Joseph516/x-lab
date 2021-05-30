@@ -13,6 +13,14 @@ type FileInfo struct {
 	AccessUrl string
 }
 
+// type UploadFileRequest struct {
+// 	Filename string `json:"filename"`
+// 	Desc string `json:"desc"`
+// 	FileAccessUrl string `json:"file_access_url"`
+// 	CreatedTime int64 `json:"created_time"`
+// 	CreatedBy string `json:"created_by"`
+// }
+
 func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fileHeader *multipart.FileHeader) (*FileInfo, error) {
 	// fileName := upload.GetFileName(fileHeader.Filename)
 	fileName := fileHeader.Filename // 不对文件名加密
@@ -39,5 +47,14 @@ func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fi
 	}
 
 	accessUrl := global.AppSetting.UploadServerUrl + "/" + fileName
+
+	// 将文件上传记录写入数据库Î
+	// TODO: 文件上传写入数据库信息待完善
+	// TODO: 上传重名文件
+	err := svc.dao.UploadFile(fileName, "", "hyh", accessUrl, int(fileType))
+	if err != nil {
+		return nil, err
+	}
+
 	return &FileInfo{Name: fileName, AccessUrl: accessUrl}, nil
 }
